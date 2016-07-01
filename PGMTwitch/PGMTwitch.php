@@ -147,9 +147,7 @@
 		if ($followers)
 		{
 			$infos['followers'] = $obj['stream']['channel']['followers'];
-		}
-
-		var_dump($infos);		
+		}		
 
 		return $infos;
   	}
