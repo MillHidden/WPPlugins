@@ -57,7 +57,7 @@
 		return $output;
   	}
 
-  	public function embed_datas_twitch($atts)
+  	/*public function embed_datas_twitch($atts)
   	{
   		extract(shortcode_atts(array(
   			'username' => "puregamemedia"
@@ -86,7 +86,7 @@
 				</div>';
 		
   		return $output;
-  	}
+  	}*/
 
   	public function file_get_contents_curl($url) {
 		$ch = curl_init();
@@ -102,6 +102,57 @@
 
 		return $data;
 	}
+
+	public function embed_datas_twitch($atts)
+  	{
+  		extract(shortcode_atts(array(
+  			'username' => "puregamemedia",
+  			'title' => false,
+  			'url' => false,
+  			'game' => false,
+  			'viewers' => false,
+  			'followers' => false,
+  			'datas' => 'some'
+
+   		  ), $atts));
+
+  		$videourl = "https://api.twitch.tv/kraken/streams/".$username;
+  		$videos = self::file_get_contents_curl($videourl);
+  		$obj = json_decode($videos, true);
+  		
+  		if ($datas === "all")
+  		{  		
+			$title = true;
+			$url = true;
+			$game = true;
+			$viewers = true;
+			$followers = true;
+		} 
+		if ($title) 
+		{
+			$infos['title'] = $obj['stream']['channel']['status'];
+		}
+		if ($url)
+		{
+			$infos['url'] = $obj['stream']['channel']['url'];
+		}
+		if ($game)
+		{
+			$infos['game'] = $obj['stream']['game'];
+		}
+		if ($viewers)
+		{
+			$infos['viewers'] = $obj['stream']['viewers'];
+		}
+		if ($followers)
+		{
+			$infos['followers'] = $obj['stream']['channel']['followers'];
+		}
+
+		var_dump($infos);		
+
+		return $infos;
+  	}
   }
 
 add_shortcode('embedTwitch', array('PGMTwitch_plugin', 'embed_live_twitch'));
